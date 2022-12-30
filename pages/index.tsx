@@ -19,10 +19,8 @@ const Home: NextPage = () => {
     process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS
   );
 
-  if (isLoading) return (
-    <Loading />
-  )
-  if (!address) return (<Login /> )
+  if (isLoading) return ( <Loading /> )
+  if (!address) return ( <Login /> )
 
   console.log(address);
   return (
