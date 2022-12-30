@@ -1,4 +1,5 @@
 import React from 'react'
+import NavButton from './NavButton'
 
 function Header() {
   return (
@@ -13,6 +14,10 @@ function Header() {
             <h1 className="text-lg text-white font-bold">WOEBEGONE DRAW</h1>
             <p className="text-xs  text-emerald-500 truncate">User...</p>
         </div>
+        </div>
+        <div className="bg-[#0A1F1C] p-4 space-x-2">
+            <NavButton isActive title="Buy Tickets"/>
+            <NavButton title="Logout"/>
         </div>
     </div>
   )
