@@ -9,7 +9,7 @@ function NavButton( {title, isActive} : Props) {
   return (
     <button className={`${
         isActive && "bg-[#036756]"
-    } hover:bg-[#036756] text-white py-2 px-4 rounded`}>
+    } hover:bg-[#036756] text-white py-2 px-4 rounded font-bold`}>
     {title}
     </button>
   );
