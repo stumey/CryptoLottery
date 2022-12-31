@@ -1,7 +1,7 @@
 # Crypto Lottery DApp: Solidity, Typescript, Next.js + Tailwind CSS
 
 ## Smart Contract used for dApp is located here: https://github.com/stumey/lottery-smart-contract 
-
+<br>
 This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.2)](https://tailwindcss.com/blog/tailwindcss-v3-2) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
 
 ## Deploy your own
