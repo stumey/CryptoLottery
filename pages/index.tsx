@@ -17,6 +17,7 @@ import Login from "../components/Login";
 import { currency } from "../constants";
 import CountdownTimer from "../components/CountdownTimer";
 import toast from "react-hot-toast";
+import Marquee from "react-fast-marquee";
 
 const Home: NextPage = () => {
   const address = useAddress();
@@ -42,6 +43,23 @@ const Home: NextPage = () => {
   );
 
   const { mutateAsync: BuyTickets } = useContractWrite(contract, "BuyTickets");
+
+  const { mutateAsync: WithdrawWinnings } = useContractWrite(
+    contract,
+    "WithdrawWinnings"
+  );
+
+  const { data: winnings } = useContractRead(
+    contract,
+    "getWinningsForAddress",
+    address
+  );
+
+  const { data: lastWinner } = useContractRead(contract, "lastWinner");
+  const { data: lastWinnerAmount } = useContractRead(
+    contract,
+    "lastWinnerAmount"
+  );
 
   useEffect(() => {
     if (!tickets) return;
@@ -84,6 +102,23 @@ const Home: NextPage = () => {
     }
   };
 
+  const onWithdrawWinnings = async () => {
+    const notification = toast.loading("Withdrawing your winnings...");
+
+    try {
+      await WithdrawWinnings([{}]);
+
+      toast.success("Winnings withdrawn successfully!", {
+        id: notification,
+      });
+    } catch (err) {
+      toast.error("Whoops something went wrong!", {
+        id: notification,
+      });
+      console.error("contract call failures, err");
+    }
+  };
+
   if (isLoading) return <Loading />;
   if (!address) return <Login />;
 
@@ -96,6 +131,36 @@ const Home: NextPage = () => {
 
       <div className="flex-1">
         <Header />
+        <Marquee className="bg-[#0A1F1C] p-5 mb-5" gradient={false} speed={100}>
+          <div className="flex space-x-2 mx-10">
+            <h4 className="text-white font-bold">
+              Last Winner: {lastWinner?.toString()}
+            </h4>
+            <h4 className="text-white font-bold">
+              Previous winings:{" "}
+              {lastWinnerAmount &&
+                ethers.utils.formatEther(lastWinnerAmount.toString())}{" "}
+              {currency}
+            </h4>
+          </div>
+        </Marquee>
+
+        {winnings > 0 && (
+          <div className="max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-5">
+            <button
+              onClick={onWithdrawWinnings}
+              className="p-5 bg-gradient-to-b from-orange-500 to-emerald-600 animate-pulse text-center rounded-xl w-full"
+            >
+              <p className="font-bold">Winner Winner Chicken Dinner!</p>
+              <p>
+                Total Winnings: {ethers.utils.formatEther(winnings.toString())}{" "}
+                {currency}
+              </p>
+              <br />
+              <p className="font-semibold">Click here to withdraw</p>
+            </button>
+          </div>
+        )}
 
         {/* The Next Draw Box */}
         <div
@@ -212,7 +277,9 @@ const Home: NextPage = () => {
 
             {userTickets > 0 && (
               <div className="stats">
-                <p className="text-lg mb-2">you have {userTickets} Tickets in this draw</p>
+                <p className="text-lg mb-2">
+                  you have {userTickets} Tickets in this draw
+                </p>
 
                 <div className="flex max-w-sm flex-wrap gap-x-2 gap-y-2">
                   {Array(userTickets)
